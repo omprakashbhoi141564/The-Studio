@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply bg-studio-bg text-studio-dark;
+}
+
+input,
+textarea,
+button {
+  @apply outline-none;
+}

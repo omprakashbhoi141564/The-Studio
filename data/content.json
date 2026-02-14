@@ -1,0 +1,38 @@
+{
+  "studioName": "The Studio",
+  "logo": "/uploads/sample-logo.svg",
+  "hero": {
+    "image": "/uploads/sample-hero.svg",
+    "title": "Stories That Define Generations",
+    "subtitle": "Discover iconic characters, world-building, and cinematic moments from our latest releases."
+  },
+  "cards": [
+    {
+      "id": "card_1",
+      "title": "Astra Vanguard",
+      "description": "A fearless pilot leading the rebellion in the Neon Skies saga.",
+      "image": "/uploads/sample-card-1.svg",
+      "order": 1
+    },
+    {
+      "id": "card_2",
+      "title": "Echoes of Tides",
+      "description": "A drama-thriller set in a floating city where memories are traded.",
+      "image": "/uploads/sample-card-2.svg",
+      "order": 2
+    },
+    {
+      "id": "card_3",
+      "title": "Ruinbreaker",
+      "description": "Ancient myth collides with future tech in this action epic.",
+      "image": "/uploads/sample-card-3.svg",
+      "order": 3
+    }
+  ],
+  "socialLinks": {
+    "facebook": "https://facebook.com",
+    "instagram": "https://instagram.com",
+    "linkedin": "https://linkedin.com",
+    "youtube": "https://youtube.com"
+  }
+}
