@@ -27,8 +27,9 @@ export default function SidePanel({ open, onClose }: SidePanelProps) {
         onClick={onClose}
       />
       <aside
-        className={`fixed right-0 top-0 z-50 h-full w-[320px] bg-studio-surface p-5 shadow-xl transition-transform duration-300 ${
-          open ? "translate-x-0" : "translate-x-full"
+        id="mobile-side-panel"
+        className={`fixed right-0 top-0 z-50 h-full w-[320px] overflow-y-auto bg-studio-surface p-5 shadow-xl transition-all duration-300 ${
+          open ? "visible translate-x-0 opacity-100" : "invisible translate-x-full opacity-0 pointer-events-none"
         }`}
       >
         <div className="mb-6 flex items-center justify-between">

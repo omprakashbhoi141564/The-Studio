@@ -17,8 +17,10 @@ export default function Header({ content }: PublicContentProps) {
         </div>
 
         <button
-          onClick={() => setMenuOpen(true)}
-          aria-label="Open menu"
+          onClick={() => setMenuOpen((prev) => !prev)}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
+          aria-controls="mobile-side-panel"
           className="rounded-md p-2 hover:bg-black/5"
         >
           <Bars3Icon className="h-7 w-7" />
