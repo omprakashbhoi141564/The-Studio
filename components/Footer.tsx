@@ -20,7 +20,9 @@ export default function Footer({ content }: PublicContentProps) {
     <footer id="contact" className="border-t border-stone-300 bg-studio-surface py-10">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 sm:px-6 md:grid-cols-2 lg:px-8">
         <div>
-          <img src={content.logo} alt="Footer logo" className="h-16 w-16 rounded-full object-cover" />
+          <div className="h-16 w-16 overflow-hidden rounded-full ring-2 ring-stone-300">
+            <img src={content.logo} alt="Footer logo" className="h-full w-full object-cover object-center" />
+          </div>
           <div className="mt-5 flex items-center gap-3">
             <a href={content.socialLinks.facebook} target="_blank" rel="noreferrer" className="rounded-full border border-stone-300 p-2">
               <FaFacebookF />

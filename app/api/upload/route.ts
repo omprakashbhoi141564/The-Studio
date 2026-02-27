@@ -15,6 +15,18 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "File is required" }, { status: 400 });
   }
 
+  const mime = file.type?.toLowerCase() || "";
+  if (!mime.startsWith("image/")) {
+    return NextResponse.json({ error: "Only image files are allowed." }, { status: 400 });
+  }
+
+  if (mime.includes("heic") || mime.includes("heif")) {
+    return NextResponse.json(
+      { error: "HEIC/HEIF is not supported. Please upload JPG, PNG, WebP, or SVG." },
+      { status: 400 }
+    );
+  }
+
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
 

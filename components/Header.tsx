@@ -12,8 +12,14 @@ export default function Header({ content }: PublicContentProps) {
     <header id="home" className="sticky top-0 z-30 border-b border-stone-300 bg-studio-surface/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         <div className="flex items-center gap-3">
-          <img src={content.logo} alt={`${content.studioName} logo`} className="h-12 w-12 rounded-full object-cover" />
-          <p className="text-xl font-semibold tracking-wide">{content.studioName}</p>
+          <div className="h-12 w-12 overflow-hidden rounded-full ring-2 ring-stone-200">
+            <img
+              src={content.logo}
+              alt={`${content.studioName} logo`}
+              className="h-full w-full object-cover object-center"
+            />
+          </div>
+          <p className="max-w-[180px] truncate text-lg font-semibold tracking-wide sm:max-w-none sm:text-xl">{content.studioName}</p>
         </div>
 
         <button

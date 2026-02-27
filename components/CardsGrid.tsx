@@ -7,7 +7,9 @@ export default function CardsGrid({ content }: PublicContentProps) {
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {content.cards.map((card) => (
           <article key={card.id} className="overflow-hidden rounded-lg border border-stone-300 bg-white shadow-sm">
-            <img src={card.image} alt={card.title} className="h-72 w-full object-cover" />
+            <div className="aspect-[3/4] w-full overflow-hidden bg-stone-200">
+              <img src={card.image} alt={card.title} className="h-full w-full object-cover object-center" />
+            </div>
             <div className="p-4">
               <h3 className="text-lg font-semibold">{card.title}</h3>
               <p className="mt-2 text-sm text-stone-700">{card.description}</p>

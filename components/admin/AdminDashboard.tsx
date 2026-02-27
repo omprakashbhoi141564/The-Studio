@@ -18,6 +18,7 @@ export default function AdminDashboard({ initialContent }: Props) {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<Message>(null);
   const [newCard, setNewCard] = useState({ title: "", description: "", image: "" });
+  const [uploadingNewCardImage, setUploadingNewCardImage] = useState(false);
 
   useEffect(() => {
     if (!message) return;
@@ -37,7 +38,14 @@ export default function AdminDashboard({ initialContent }: Props) {
     });
 
     if (!response.ok) {
-      throw new Error("Upload failed");
+      let errorMessage = "Upload failed";
+      try {
+        const data = await response.json();
+        if (data?.error) errorMessage = data.error;
+      } catch {
+        // ignore parsing errors and keep default message
+      }
+      throw new Error(errorMessage);
     }
 
     const data = await response.json();
@@ -73,8 +81,9 @@ export default function AdminDashboard({ initialContent }: Props) {
     try {
       const path = await uploadFile(file);
       await saveContent({ ...content, logo: path });
-    } catch {
-      setMessage({ type: "error", text: "Logo upload failed" });
+    } catch (error) {
+      const text = error instanceof Error ? error.message : "Logo upload failed";
+      setMessage({ type: "error", text });
     }
   }
 
@@ -84,8 +93,9 @@ export default function AdminDashboard({ initialContent }: Props) {
     try {
       const path = await uploadFile(file);
       await saveContent({ ...content, hero: { ...content.hero, image: path } });
-    } catch {
-      setMessage({ type: "error", text: "Hero upload failed" });
+    } catch (error) {
+      const text = error instanceof Error ? error.message : "Hero upload failed";
+      setMessage({ type: "error", text });
     }
   }
 
@@ -96,8 +106,26 @@ export default function AdminDashboard({ initialContent }: Props) {
       const path = await uploadFile(file);
       const cards = sortedCards.map((item) => (item.id === card.id ? { ...item, image: path } : item));
       await saveContent({ ...content, cards });
-    } catch {
-      setMessage({ type: "error", text: "Card image upload failed" });
+    } catch (error) {
+      const text = error instanceof Error ? error.message : "Card image upload failed";
+      setMessage({ type: "error", text });
+    }
+  }
+
+  async function handleNewCardImageUpload(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setUploadingNewCardImage(true);
+    try {
+      const path = await uploadFile(file);
+      setNewCard((prev) => ({ ...prev, image: path }));
+      setMessage({ type: "success", text: "New card image uploaded. Now click Add Card." });
+    } catch (error) {
+      const text = error instanceof Error ? error.message : "New card image upload failed";
+      setMessage({ type: "error", text });
+    } finally {
+      setUploadingNewCardImage(false);
     }
   }
 
@@ -209,6 +237,10 @@ export default function AdminDashboard({ initialContent }: Props) {
           <label className="block">
             <span className="text-sm font-medium">Upload Logo</span>
             <input type="file" accept="image/*" className="mt-1 block w-full" onChange={handleLogoUpload} />
+            <p className="mt-1 text-xs text-stone-500">Best results: square JPG/PNG/WebP image.</p>
+            <div className="mt-3 h-20 w-20 overflow-hidden rounded-full border border-stone-300">
+              <img src={content.logo} alt="Current logo preview" className="h-full w-full object-cover object-center" />
+            </div>
           </label>
         </div>
       </section>
@@ -219,6 +251,10 @@ export default function AdminDashboard({ initialContent }: Props) {
           <label className="block md:col-span-2">
             <span className="text-sm font-medium">Upload Hero Background</span>
             <input type="file" accept="image/*" className="mt-1 block w-full" onChange={handleHeroImageUpload} />
+            <p className="mt-1 text-xs text-stone-500">Use wide landscape image for best fit.</p>
+            <div className="mt-3 h-36 w-full overflow-hidden rounded border border-stone-300 bg-stone-100">
+              <img src={content.hero.image} alt="Current hero preview" className="h-full w-full object-cover object-center" />
+            </div>
           </label>
           <label className="block">
             <span className="text-sm font-medium">Hero Title</span>
@@ -260,17 +296,26 @@ export default function AdminDashboard({ initialContent }: Props) {
             className="rounded border border-stone-300 px-3 py-2"
             onChange={(e) => setNewCard({ ...newCard, description: e.target.value })}
           />
-          <input
-            type="text"
-            placeholder="Image URL (/uploads/.. or https://...)"
-            value={newCard.image}
-            className="rounded border border-stone-300 px-3 py-2"
-            onChange={(e) => setNewCard({ ...newCard, image: e.target.value })}
-          />
+          <div className="space-y-2">
+            <input
+              type="text"
+              placeholder="Image URL (/uploads/.. or https://...)"
+              value={newCard.image}
+              className="w-full rounded border border-stone-300 px-3 py-2"
+              onChange={(e) => setNewCard({ ...newCard, image: e.target.value })}
+            />
+            <input type="file" accept="image/*" className="block w-full text-sm" onChange={handleNewCardImageUpload} />
+            {uploadingNewCardImage ? <p className="text-xs text-stone-500">Uploading...</p> : null}
+          </div>
           <button className="rounded bg-studio-accent px-3 py-2 text-white" type="submit" disabled={loading}>
             Add Card
           </button>
         </form>
+        {newCard.image ? (
+          <div className="mt-3 h-40 w-32 overflow-hidden rounded border border-stone-300 bg-stone-100">
+            <img src={newCard.image} alt="New card preview" className="h-full w-full object-cover object-center" />
+          </div>
+        ) : null}
 
         <div className="mt-5 space-y-3">
           {sortedCards.map((card, index) => (
