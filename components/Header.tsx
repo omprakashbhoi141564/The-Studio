@@ -15,7 +15,7 @@ export default function Header({ content }: PublicContentProps) {
 
   return (
     <>
-      <header id="home" className="sticky top-0 z-30 border-b border-stone-300 bg-studio-surface/95">
+      <header id="home" className="sticky top-0 z-30 border-b border-stone-200 bg-studio-surface/80">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
             <div className="h-12 w-12 overflow-hidden rounded-full ring-2 ring-stone-200">
