@@ -28,7 +28,7 @@ export default function SidePanel({ open, onClose }: SidePanelProps) {
       />
       <aside
         id="mobile-side-panel"
-        className={`fixed right-0 top-0 z-50 h-full w-[320px] overflow-y-auto border-l border-stone-700 bg-stone-950 p-5 text-stone-100 shadow-2xl transition-all duration-300 ${
+        className={`fixed right-0 top-0 z-50 h-dvh w-[88vw] max-w-[340px] overflow-y-auto border-l border-stone-700 bg-stone-950 p-5 text-stone-100 shadow-2xl transition-all duration-300 ${
           open ? "visible translate-x-0 opacity-100" : "invisible translate-x-full opacity-0 pointer-events-none"
         }`}
       >
