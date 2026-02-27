@@ -107,21 +107,16 @@ async function main() {
 
     const sortedCards = [...content.cards].sort((a, b) => a.order - b.order);
 
-    for (let index = 0; index < sortedCards.length; index += 1) {
-      const card = sortedCards[index];
-      const section = card.section === "poster" ? "poster" : index < 3 ? "poster" : "character";
-      const linkUrl = card.linkUrl || "";
+    for (const [index, card] of sortedCards.entries()) {
       await connection.query(
-        `INSERT INTO cards (id, title, description, image, sort_order, section, link_url)
-         VALUES (?, ?, ?, ?, ?, ?, ?)
+        `INSERT INTO cards (id, title, description, image, sort_order)
+         VALUES (?, ?, ?, ?, ?)
          ON DUPLICATE KEY UPDATE
            title = VALUES(title),
            description = VALUES(description),
            image = VALUES(image),
-           sort_order = VALUES(sort_order),
-           section = VALUES(section),
-           link_url = VALUES(link_url)`,
-        [card.id, card.title, card.description, card.image, index + 1, section, linkUrl]
+           sort_order = VALUES(sort_order)`,
+        [card.id, card.title, card.description, card.image, index + 1]
       );
     }
 

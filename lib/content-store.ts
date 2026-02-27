@@ -1,14 +1,7 @@
 import { SiteContent, StudioCard } from "@/lib/types";
 import { getDbPool } from "@/lib/db";
 
-async function ensureCardColumns() {
-  const pool = getDbPool();
-  await pool.query("ALTER TABLE cards ADD COLUMN IF NOT EXISTS section VARCHAR(20) NOT NULL DEFAULT 'character'");
-  await pool.query("ALTER TABLE cards ADD COLUMN IF NOT EXISTS link_url TEXT NULL");
-}
-
 export async function readContent(): Promise<SiteContent> {
-  await ensureCardColumns();
   const pool = getDbPool();
 
   const [[siteRows], [cardRows]] = await Promise.all([
@@ -19,7 +12,7 @@ export async function readContent(): Promise<SiteContent> {
        WHERE id = 1`
     ),
     pool.query(
-      `SELECT id, title, description, image, sort_order, section, link_url
+      `SELECT id, title, description, image, sort_order
        FROM cards
        ORDER BY sort_order ASC`
     )
@@ -38,9 +31,7 @@ export async function readContent(): Promise<SiteContent> {
     title: String(row.title),
     description: String(row.description),
     image: String(row.image),
-    order: Number(row.sort_order),
-    section: String(row.section || "character") === "poster" ? "poster" : "character",
-    linkUrl: row.link_url ? String(row.link_url) : ""
+    order: Number(row.sort_order)
   }));
 
   return {
@@ -62,7 +53,6 @@ export async function readContent(): Promise<SiteContent> {
 }
 
 export async function writeContent(content: SiteContent): Promise<void> {
-  await ensureCardColumns();
   const pool = getDbPool();
   const connection = await pool.getConnection();
 
@@ -102,9 +92,9 @@ export async function writeContent(content: SiteContent): Promise<void> {
     for (let index = 0; index < sortedCards.length; index += 1) {
       const card = sortedCards[index];
       await connection.query(
-        `INSERT INTO cards (id, title, description, image, sort_order, section, link_url)
-         VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [card.id, card.title, card.description, card.image, index + 1, card.section || "character", card.linkUrl || ""]
+        `INSERT INTO cards (id, title, description, image, sort_order)
+         VALUES (?, ?, ?, ?, ?)`,
+        [card.id, card.title, card.description, card.image, index + 1]
       );
     }
 

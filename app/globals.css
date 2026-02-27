@@ -7,8 +7,7 @@
 }
 
 body {
-  background: #050b3b;
-  color: #e9ecff;
+  @apply bg-studio-bg text-studio-dark;
 }
 
 input,

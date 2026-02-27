@@ -4,8 +4,6 @@ export type StudioCard = {
   description: string;
   image: string;
   order: number;
-  section: "poster" | "character";
-  linkUrl?: string;
 };
 
 export type SiteContent = {
