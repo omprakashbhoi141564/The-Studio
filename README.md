@@ -18,7 +18,7 @@ A full responsive studio website with an admin dashboard to manage logo, hero co
   - Edit social links
 - Data layer:
   - Aiven MySQL database (site content + cards)
-  - Image uploads stored in `public/uploads`
+  - Image uploads stored on disk and served via `/api/uploads/:filename`
   - API routes for CRUD + upload + auth
 
 ## Tech Stack
@@ -42,7 +42,8 @@ A full responsive studio website with an admin dashboard to manage logo, hero co
 - `db/schema.sql` - MySQL schema
 - `scripts/db-init.mjs` - initialize + seed DB from sample JSON
 - `data/content.json` - sample seed content
-- `public/uploads/*` - uploaded images + sample placeholders
+- `public/uploads/*` - sample placeholders
+- `data/uploads/*` - runtime uploaded images (or `UPLOAD_DIR` path)
 
 ## Setup
 
@@ -64,6 +65,7 @@ cp .env.example .env.local
 - `ADMIN_SESSION_TOKEN` - random secret string for cookie validation
 - `DATABASE_URL` - Aiven MySQL connection URL
 - `DB_SSL` - keep `true` for Aiven (set `false` only for local non-SSL MySQL)
+- `UPLOAD_DIR` - writable upload path (for Render persistent disk use `/var/data/uploads`)
 
 4. Initialize database schema + seed:
 
@@ -86,7 +88,7 @@ npm run dev
 
 - Login with the password from `.env.local`
 - Use dashboard sections to manage branding, hero, cards, and links
-- Uploaded files are saved under `public/uploads`
+- Uploaded files are saved under `UPLOAD_DIR` and served at `/api/uploads/:filename`
 - Content updates are persisted in Aiven MySQL
 
 ## Production
