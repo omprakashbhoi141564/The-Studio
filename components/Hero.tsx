@@ -11,19 +11,29 @@ export default function Hero({ content }: PublicContentProps) {
   }, [content.hero.image]);
 
   return (
-    <section className="relative mx-auto mt-4 h-[380px] max-w-6xl overflow-hidden rounded-xl sm:h-[470px]">
-      <img
-        src={heroSrc}
-        alt="Hero background"
-        className="absolute inset-0 h-full w-full object-cover object-center"
-        onError={() => setHeroSrc("/uploads/sample-hero.svg")}
-      />
-      <div className="absolute inset-0 bg-black/45" />
-      <div className="relative z-10 flex h-full items-center px-6 sm:px-10">
-        <div className="max-w-2xl text-white">
-          <h1 className="text-3xl font-bold leading-tight sm:text-5xl">{content.hero.title}</h1>
-          <p className="mt-4 text-base text-stone-100 sm:text-lg">{content.hero.subtitle}</p>
+    <section className="mx-auto mt-4 max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div className="relative h-[260px] overflow-hidden rounded-2xl border border-stone-200 bg-white sm:h-[380px]">
+        <img
+          src={heroSrc}
+          alt="Hero background"
+          className="absolute inset-0 h-full w-full object-cover object-center"
+          onError={() => setHeroSrc("/uploads/sample-hero.svg")}
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/55 to-transparent" />
+        <div className="relative z-10 flex h-full items-center px-5 sm:px-8">
+          <div className="max-w-[60%] text-stone-900 sm:max-w-[50%]">
+            <h1 className="text-2xl font-bold leading-tight sm:text-5xl">{content.hero.title}</h1>
+            <p className="mt-3 text-sm text-stone-700 sm:mt-4 sm:text-2xl">{content.hero.subtitle}</p>
+          </div>
         </div>
+      </div>
+
+      <div className="mt-3 flex items-center justify-center gap-4">
+        <span className="h-1.5 w-6 rounded-full bg-stone-300" />
+        <span className="h-1.5 w-6 rounded-full bg-stone-300" />
+        <span className="h-1.5 w-12 rounded-full bg-black" />
+        <span className="h-1.5 w-6 rounded-full bg-stone-300" />
+        <span className="h-1.5 w-6 rounded-full bg-stone-300" />
       </div>
     </section>
   );

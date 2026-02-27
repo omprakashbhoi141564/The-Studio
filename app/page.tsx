@@ -21,6 +21,7 @@ export default async function HomePage() {
     <main className="min-h-screen">
       <Header content={content} />
       <Hero content={content} />
+      <CardsGrid content={content} />
       <section id="about" className="mx-auto mt-10 max-w-6xl px-4 sm:px-6 lg:px-8">
         <h2 className="text-2xl font-semibold">About Us</h2>
         <p className="mt-3 max-w-3xl text-stone-700">
@@ -39,7 +40,6 @@ export default async function HomePage() {
           Discover box office milestones, audience favorites, and award-winning productions.
         </p>
       </section>
-      <CardsGrid content={content} />
       <Footer content={content} />
     </main>
   );
