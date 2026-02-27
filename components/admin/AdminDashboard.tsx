@@ -17,7 +17,13 @@ export default function AdminDashboard({ initialContent }: Props) {
   const [content, setContent] = useState<SiteContent>(initialContent);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<Message>(null);
-  const [newCard, setNewCard] = useState({ title: "", description: "", image: "" });
+  const [newCard, setNewCard] = useState({
+    title: "",
+    description: "",
+    image: "",
+    section: "character" as "poster" | "character",
+    linkUrl: ""
+  });
   const [uploadingNewCardImage, setUploadingNewCardImage] = useState(false);
 
   useEffect(() => {
@@ -27,6 +33,8 @@ export default function AdminDashboard({ initialContent }: Props) {
   }, [message]);
 
   const sortedCards = useMemo(() => [...content.cards].sort((a, b) => a.order - b.order), [content.cards]);
+  const posterCards = useMemo(() => sortedCards.filter((card) => card.section === "poster"), [sortedCards]);
+  const characterCards = useMemo(() => sortedCards.filter((card) => card.section === "character"), [sortedCards]);
 
   async function uploadFile(file: File) {
     const form = new FormData();
@@ -155,7 +163,7 @@ export default function AdminDashboard({ initialContent }: Props) {
 
       const data = await response.json();
       setContent(data.content as SiteContent);
-      setNewCard({ title: "", description: "", image: "" });
+      setNewCard({ title: "", description: "", image: "", section: "character", linkUrl: "" });
       setMessage({ type: "success", text: "Card added" });
     } catch {
       setMessage({ type: "error", text: "Could not add card" });
@@ -305,6 +313,23 @@ export default function AdminDashboard({ initialContent }: Props) {
               onChange={(e) => setNewCard({ ...newCard, image: e.target.value })}
             />
             <input type="file" accept="image/*" className="block w-full text-sm" onChange={handleNewCardImageUpload} />
+            <select
+              value={newCard.section}
+              className="w-full rounded border border-stone-300 px-3 py-2"
+              onChange={(e) =>
+                setNewCard({ ...newCard, section: e.target.value === "poster" ? "poster" : "character" })
+              }
+            >
+              <option value="poster">Poster Section</option>
+              <option value="character">Character Section</option>
+            </select>
+            <input
+              type="url"
+              placeholder="Info Link URL (optional)"
+              value={newCard.linkUrl}
+              className="w-full rounded border border-stone-300 px-3 py-2"
+              onChange={(e) => setNewCard({ ...newCard, linkUrl: e.target.value })}
+            />
             {uploadingNewCardImage ? <p className="text-xs text-stone-500">Uploading...</p> : null}
           </div>
           <button className="rounded bg-studio-accent px-3 py-2 text-white" type="submit" disabled={loading}>
@@ -317,9 +342,12 @@ export default function AdminDashboard({ initialContent }: Props) {
           </div>
         ) : null}
 
-        <div className="mt-5 space-y-3">
-          {sortedCards.map((card, index) => (
-            <div key={card.id} className="grid gap-3 rounded border border-stone-300 p-3 md:grid-cols-12">
+        <div className="mt-5 space-y-6">
+          <div>
+            <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-stone-600">Poster Cards (Auto Slider)</h3>
+            <div className="space-y-3">
+              {posterCards.map((card, index) => (
+                <div key={card.id} className="grid gap-3 rounded border border-stone-300 p-3 md:grid-cols-12">
               <img src={card.image} alt={card.title} className="h-28 w-full rounded object-cover md:col-span-2" />
               <div className="md:col-span-8 space-y-2">
                 <input
@@ -348,6 +376,29 @@ export default function AdminDashboard({ initialContent }: Props) {
                   <label className="text-xs text-stone-600">Upload card image</label>
                   <input type="file" accept="image/*" className="block w-full" onChange={(e) => handleCardImageUpload(card, e)} />
                 </div>
+                <div className="grid gap-2 md:grid-cols-2">
+                  <select
+                    value={card.section}
+                    className="w-full rounded border border-stone-300 px-3 py-2"
+                    onChange={(e) => updateCardField(card.id, "section", e.target.value === "poster" ? "poster" : "character")}
+                  >
+                    <option value="poster">Poster Section</option>
+                    <option value="character">Character Section</option>
+                  </select>
+                  <input
+                    type="url"
+                    value={card.linkUrl || ""}
+                    placeholder="Info Link URL"
+                    className="w-full rounded border border-stone-300 px-3 py-2"
+                    onChange={(e) => {
+                      const cards = sortedCards.map((item) =>
+                        item.id === card.id ? { ...item, linkUrl: e.target.value } : item
+                      );
+                      setContent({ ...content, cards });
+                    }}
+                    onBlur={(e) => updateCardField(card.id, "linkUrl", e.target.value)}
+                  />
+                </div>
               </div>
               <div className="flex items-center gap-2 md:col-span-2 md:flex-col md:items-stretch">
                 <button
@@ -362,7 +413,7 @@ export default function AdminDashboard({ initialContent }: Props) {
                   className="flex items-center justify-center rounded border border-stone-300 px-2 py-2 disabled:opacity-50"
                   onClick={() => reorderCard(card.id, "down")}
                   type="button"
-                  disabled={index === sortedCards.length - 1 || loading}
+                  disabled={index === posterCards.length - 1 || loading}
                 >
                   <ArrowDownIcon className="h-4 w-4" />
                 </button>
@@ -375,8 +426,98 @@ export default function AdminDashboard({ initialContent }: Props) {
                   <TrashIcon className="h-4 w-4" />
                 </button>
               </div>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
+
+          <div>
+            <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-stone-600">Character Cards (4 Per Row)</h3>
+            <div className="space-y-3">
+              {characterCards.map((card, index) => (
+                <div key={card.id} className="grid gap-3 rounded border border-stone-300 p-3 md:grid-cols-12">
+                  <img src={card.image} alt={card.title} className="h-28 w-full rounded object-cover md:col-span-2" />
+                  <div className="md:col-span-8 space-y-2">
+                    <input
+                      value={card.title}
+                      className="w-full rounded border border-stone-300 px-3 py-2"
+                      onChange={(e) => {
+                        const cards = sortedCards.map((item) =>
+                          item.id === card.id ? { ...item, title: e.target.value } : item
+                        );
+                        setContent({ ...content, cards });
+                      }}
+                      onBlur={(e) => updateCardField(card.id, "title", e.target.value)}
+                    />
+                    <textarea
+                      value={card.description}
+                      className="w-full rounded border border-stone-300 px-3 py-2"
+                      onChange={(e) => {
+                        const cards = sortedCards.map((item) =>
+                          item.id === card.id ? { ...item, description: e.target.value } : item
+                        );
+                        setContent({ ...content, cards });
+                      }}
+                      onBlur={(e) => updateCardField(card.id, "description", e.target.value)}
+                    />
+                    <div>
+                      <label className="text-xs text-stone-600">Upload card image</label>
+                      <input type="file" accept="image/*" className="block w-full" onChange={(e) => handleCardImageUpload(card, e)} />
+                    </div>
+                    <div className="grid gap-2 md:grid-cols-2">
+                      <select
+                        value={card.section}
+                        className="w-full rounded border border-stone-300 px-3 py-2"
+                        onChange={(e) => updateCardField(card.id, "section", e.target.value === "poster" ? "poster" : "character")}
+                      >
+                        <option value="poster">Poster Section</option>
+                        <option value="character">Character Section</option>
+                      </select>
+                      <input
+                        type="url"
+                        value={card.linkUrl || ""}
+                        placeholder="Info Link URL"
+                        className="w-full rounded border border-stone-300 px-3 py-2"
+                        onChange={(e) => {
+                          const cards = sortedCards.map((item) =>
+                            item.id === card.id ? { ...item, linkUrl: e.target.value } : item
+                          );
+                          setContent({ ...content, cards });
+                        }}
+                        onBlur={(e) => updateCardField(card.id, "linkUrl", e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 md:col-span-2 md:flex-col md:items-stretch">
+                    <button
+                      className="flex items-center justify-center rounded border border-stone-300 px-2 py-2 disabled:opacity-50"
+                      onClick={() => reorderCard(card.id, "up")}
+                      type="button"
+                      disabled={index === 0 || loading}
+                    >
+                      <ArrowUpIcon className="h-4 w-4" />
+                    </button>
+                    <button
+                      className="flex items-center justify-center rounded border border-stone-300 px-2 py-2 disabled:opacity-50"
+                      onClick={() => reorderCard(card.id, "down")}
+                      type="button"
+                      disabled={index === characterCards.length - 1 || loading}
+                    >
+                      <ArrowDownIcon className="h-4 w-4" />
+                    </button>
+                    <button
+                      className="flex items-center justify-center rounded border border-red-300 px-2 py-2 text-red-700"
+                      onClick={() => deleteCard(card.id)}
+                      type="button"
+                      disabled={loading}
+                    >
+                      <TrashIcon className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 

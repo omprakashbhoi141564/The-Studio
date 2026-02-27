@@ -18,6 +18,8 @@ CREATE TABLE IF NOT EXISTS cards (
   description TEXT NOT NULL,
   image TEXT NOT NULL,
   sort_order INT NOT NULL,
+  section VARCHAR(20) NOT NULL DEFAULT 'character',
+  link_url TEXT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   INDEX idx_cards_sort_order (sort_order)
 );

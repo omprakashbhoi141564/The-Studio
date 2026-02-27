@@ -12,21 +12,54 @@
       "title": "Astra Vanguard",
       "description": "A fearless pilot leading the rebellion in the Neon Skies saga.",
       "image": "/uploads/sample-card-1.svg",
-      "order": 1
+      "order": 1,
+      "section": "poster",
+      "linkUrl": ""
     },
     {
       "id": "card_2",
       "title": "Echoes of Tides",
       "description": "A drama-thriller set in a floating city where memories are traded.",
       "image": "/uploads/sample-card-2.svg",
-      "order": 2
+      "order": 2,
+      "section": "poster",
+      "linkUrl": ""
     },
     {
       "id": "card_3",
       "title": "Ruinbreaker",
       "description": "Ancient myth collides with future tech in this action epic.",
       "image": "/uploads/sample-card-3.svg",
-      "order": 3
+      "order": 3,
+      "section": "poster",
+      "linkUrl": ""
+    },
+    {
+      "id": "card_4",
+      "title": "Astra Vanguard",
+      "description": "A fearless pilot leading the rebellion in the Neon Skies saga.",
+      "image": "/uploads/sample-card-1.svg",
+      "order": 4,
+      "section": "character",
+      "linkUrl": ""
+    },
+    {
+      "id": "card_5",
+      "title": "Echoes of Tides",
+      "description": "A drama-thriller set in a floating city where memories are traded.",
+      "image": "/uploads/sample-card-2.svg",
+      "order": 5,
+      "section": "character",
+      "linkUrl": ""
+    },
+    {
+      "id": "card_6",
+      "title": "Ruinbreaker",
+      "description": "Ancient myth collides with future tech in this action epic.",
+      "image": "/uploads/sample-card-3.svg",
+      "order": 6,
+      "section": "character",
+      "linkUrl": ""
     }
   ],
   "socialLinks": {

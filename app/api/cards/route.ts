@@ -11,6 +11,8 @@ export async function POST(req: Request) {
     title?: string;
     description?: string;
     image?: string;
+    section?: "poster" | "character";
+    linkUrl?: string;
   };
 
   if (!body.title || !body.description || !body.image) {
@@ -24,7 +26,9 @@ export async function POST(req: Request) {
     title: body.title,
     description: body.description,
     image: body.image,
-    order: content.cards.length + 1
+    order: content.cards.length + 1,
+    section: body.section === "poster" ? "poster" : "character",
+    linkUrl: body.linkUrl || ""
   });
 
   await writeContent(content);
